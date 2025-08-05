@@ -1,0 +1,70 @@
+class Game:    
+    def __init__(self, board, player1, player2):
+        self.board= board.grid
+        self.player1 = player1
+        self.player2 = player2
+        self.res = False
+            
+    def place(self, player, x,y):
+        #TODO: add nxn logic
+        print(self.board[x][y])
+        if self.board[x][y]!='':
+            return ValueError('Invalid move')
+        self.board[x][y] = player.piece
+        if self.check_winner(player.piece):
+            self.res = True
+            print(f"Player {player.name} wins!")
+        elif self.is_full():
+            self.res = True
+            print("Game is a draw.")
+
+
+    def check_winner(self, piece):
+        pass
+
+    def is_full(self):
+        pass
+
+class Board:
+    def __init__(self, size):
+        self.initialize(size)
+    
+    def initialize(self, size):
+        self.grid = [['' for _ in range(size)] for _ in range(size)]
+    
+    def __str__(self):
+        s = ''
+        size = len(self.grid)
+        for i, row in enumerate(self.grid):
+            s += ' | '.join(col if col else ' ' for col in row)
+            if i < size - 1:
+                s += '\n' + '-' * (size * 4 - 3) + '\n'
+        return s
+
+
+class Player:
+    def __init__(self, name, piece):
+        self.name = name
+        self.piece = piece
+
+def main():
+    player1 = Player('KT1','x')
+    player2 = Player('KT2','o')
+
+    board = Board(6)
+
+    game = Game(board, player1, player2)
+    p1 = True
+    while not game.res:
+        print(board)
+        print('Move for player ', player1.name if p1 else player2.name,':')
+        try:
+            ip = input().split()
+            x,y = int(ip[0]), int(ip[1])
+            game.place(player1 if p1 else player2, x,y)
+            p1 = not p1
+        except Exception as e:
+            print('Invalid move!')
+
+    
+main()
